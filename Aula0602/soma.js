@@ -6,7 +6,7 @@ module.exports = {
             console.log(`${a} ${op} ${b} = ${(a-b)}`)
         }else if(op === "*"){
             console.log(`${a} ${op} ${b} = ${(a*b)}`)
-        }else if(op == "/"){
+        }else if(op === "/"){
             console.log(`${a} ${op} ${b} = ${(a/b)}`)
         }
     }
