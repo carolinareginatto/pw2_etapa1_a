@@ -1,9 +1,8 @@
-const chalk = require("chalk")
+const calculadora = require("./calculadora")
+const avalia = require("./avalia")
 const readline = require("readline").createInterface({
     input: process.stdin,
     output: process.stdout
 })
-readline.question("Qual sua linguagem de programação favorita: ", (linguagem) =>{
-    console.log(chalk.red("Sua linguagem preferida é: ")+linguagem)
-    readline.close()
-})
+var aluno = calculadora.media(6, 10, 9, 5)
+avalia.mensagem(aluno)
