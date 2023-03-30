@@ -28,6 +28,7 @@ function operation(){
             createAccount()
         }else if(action === 'Consultar Saldo'){
             console.log('Consultando saldo')
+            accountBalance()
         }else if(action === 'Depositar'){
             console.log('Depositando')
             deposit()
@@ -145,5 +146,70 @@ function getAccount(accountName){
         flag:'r'
     })
     return JSON.parse(accountJSON)
+}
+//#endregion
+
+//#region Consultar Saldo
+function accountBalance(){
+    inquirer.prompt([
+        {
+            name: 'accountName',
+            message: 'Qual conta deseja verificar o saldo?'
+        }
+    ]).then((answer) =>{
+        const accountName = answer['accountName']
+
+        if(!checkAccount(accountName)){
+            return accountBalance()
+        }
+        const accountData = getAccount(accountName)
+        if(accountData.balance>0){
+            console.log(chalk.green(`O saldo da conta: R$ ${accountData.balance}.`))
+        }else{
+            console.log(chalk.red(`O saldo da conta: R$ ${accountData.balance}.`))
+        }
+        setTimeout(() => {
+           operation() 
+        }, 1000)
+    })
+}
+//#endregion
+
+//#region Saque na Conta
+function withdraw(){
+    inquirer.prompt([
+        {
+            name:'accountName',
+            message: 'Qual conta efetuará o saque?'
+        }
+    ]).then((answer) => {
+        const accountName = answer['accountName']
+
+        if(!checkAccount(accountName)){
+            return withdraw()
+        }
+
+        inquirer.prompt([
+            {
+                name: 'amount',
+                message: 'Quanto deseja sacar?'
+            }
+        ]).then((answer) =>{
+            const amount = answer['amount']
+
+            removeAmount(accountName, amount)
+            operation()
+        })
+    })
+}
+
+function removeAmount(accountName, amount){
+    const accountData = getAccount(accountName)
+
+    if(!amount){
+        console.log(chalk.bgRed.black('O valor precisa ser informado!'))
+        return withdraw()
+    }
+
 }
 //#endregion
