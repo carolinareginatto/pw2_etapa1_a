@@ -34,6 +34,7 @@ function operation(){
             deposit()
         }else if(action === 'Sacar'){
             console.log('Sacando')
+            withdraw()
         }else if(action === 'Sair'){
             console.log(chalk.bgBlue.black('Obrigado por utilizar o Contas ETEC.'))
             setTimeout(() => {
@@ -73,7 +74,7 @@ function buildAccount(){
 
         fs.writeFileSync(
             `accounts/${accountName}.json`,
-            '{"balance":0}',
+            '{"balance":0, "limit":1000}',
             function (err){
                 console.error(err)
             }
@@ -210,6 +211,26 @@ function removeAmount(accountName, amount){
         console.log(chalk.bgRed.black('O valor precisa ser informado!'))
         return withdraw()
     }
+    
+    if(accountData.balance < amount){
+        console.log(chalk.bgYellow.black('Entrou no cheque especial!'))
+    }
 
+    if((accountData.balance + accountData.limit)<amount){
+        console.log(chalk.bgRed.black('Não há limite na conta!'))
+        return
+    }else{
+        accountData.balance = parseFloat(accountData.balance) - parseFloat(amount)
+
+        fs.writeFileSync(
+            `accounts/${accountName}.json`,
+            JSON.stringify(accountData),
+            function (err){
+                console.log(err)
+            }
+        )
+    
+        console.log(chalk.green(`Foi sacado: ${amount} da conta ${accountName}.`))
+    }
 }
 //#endregion
